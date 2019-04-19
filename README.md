@@ -17,5 +17,5 @@
     
     At power supply use (57600, 8 bit, No parity, Xon/Xoff)    
     
-    Coomunication channel instead of Serial port can be used. Check out :
+    Communication channel instead of Serial port can be used. Check out :
     https://pyvisa.readthedocs.io/en/1.5-docs/instruments.html#gpib-devices
