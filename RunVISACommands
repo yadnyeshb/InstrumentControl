@@ -1,0 +1,69 @@
+# Simple Python script using PyVISA
+
+# - Python 3 installed (Tested on Python 3.7)
+# - Python PyVISA 1.7 package or newer installed
+# - Resource is controlled via serial port
+
+import pyvisa
+import os
+import time
+
+
+def supply_on():
+    """
+    Turns on first power supply
+    :return: nothing
+    """
+
+    scope.write('INST OUT1')
+    scope.write('OUTP ON')
+    return
+
+
+def supply_off():
+    """
+    Turns off 1st power supply
+    :return: nothing
+    """
+    scope.write('INST OUT1')
+    scope.write('OUTP OFF')
+    return
+
+
+def set_voltage(volt):
+    """
+    Set the voltage
+    :param volt: Desired voltage in decimal.
+    :return:
+    """
+    str_volt = str(volt)
+    scope.write('VOLT ' + str_volt)
+    return
+
+
+resourceString1 = 'TCPIP::192.168.2.101::INSTR'  # Standard LAN connection (also called VXI-11)
+resourceString2 = 'TCPIP::192.168.2.101::hislip0'  # Hi-Speed LAN connection - see 1MA208
+resourceString3 = 'GPIB::20::INSTR'  # GPIB Connection
+resourceString4 = 'USB::0x0AAD::0x0119::022019943::INSTR'  # USB-TMC (Test and Measurement Class)
+resourceString5 = 'ASRL5::INSTR'  # Serial Device
+
+rm = pyvisa.ResourceManager()
+print(rm.list_resources())
+scope = rm.open_resource(resourceString5, baud_rate = 57600, data_bits = 8, write_termination= os.linesep,
+                         read_termination = os.linesep)
+
+scope.clear()
+idn_response = scope.query('*IDN?')  # Query the Identification string
+
+
+print('Hello, I am ' + idn_response)
+supply_on()
+set_voltage(14)
+time.sleep(2)
+
+# Start your script here
+input("Press Enter to Start manipulation...")
+set_voltage(32)
+# time.sleep(500/1000000)
+set_voltage(14)
+# supply_off()
